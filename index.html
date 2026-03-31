@@ -1,0 +1,3319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrainWave - Premium Study Hub</title>
+    <link rel="icon" href="images/brlogo.jpg" type="image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            background: #ffffff;
+            color: #2c3e50;
+        }
+
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 5%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .nav.scrolled {
+            padding: 1rem 5%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-sign {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            min-width: 280px;
+        }
+
+        .status-sign.open {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .status-sign.closed {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .status-indicator {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: pulse 2s infinite;
+            flex-shrink: 0;
+        }
+
+        .status-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            flex: 1;
+        }
+
+        .status-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-time {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .status-datetime {
+            text-align: right;
+            font-size: 0.8rem;
+            line-height: 1.3;
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+        }
+
+        .status-date {
+            font-weight: 500;
+            opacity: 0.95;
+            font-size: 0.8rem;
+        }
+
+        .status-time {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .status-label {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        /* Toggle Switch Styles */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 0.8rem;
+        }
+
+        .toggle-switch {
+            appearance: none;
+            width: 60px;
+            height: 34px;
+            background: #e9ecef;
+            border-radius: 34px;
+            cursor: pointer;
+            outline: none;
+            transition: background 0.3s ease;
+            position: relative;
+        }
+
+        .toggle-switch::before {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: white;
+            top: 2px;
+            left: 2px;
+            transition: left 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-switch:checked {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .toggle-switch:checked::before {
+            left: 28px;
+        }
+
+        .toggle-text {
+            font-weight: 700;
+            font-size: 1rem;
+            min-width: 70px;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            background: #f8f9fa;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #d4922f, #f4b23f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo img {
+            width: 44px;
+            height: 44px;
+            object-fit: contain;
+            flex: 0 0 auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #d4922f, #f4b23f);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #d4922f;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .mobile-menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: #d4922f;
+            transition: all 0.3s ease;
+            border-radius: 3px;
+        }
+
+        .mobile-menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .mobile-menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+        .hero-content {
+            padding-top: 12rem;
+            padding-left: 5%;
+            padding-right: 5%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: 4.5rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #2c3e50 0%, #d4922f 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero-text p {
+            font-size: 1.3rem;
+            color: #6c757d;
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .hero-status-sign {
+            display: none;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1.2rem 1.8rem;
+            margin: 2rem auto;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            width: fit-content;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-status-sign.open {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .hero-status-sign.closed {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .hero-status-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .hero-status-text {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .hero-status-datetime {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .hero-status-date {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .hero-status-time {
+            font-size: 1rem;
+            opacity: 0.95;
+            font-weight: 600;
+        }
+
+        .hero-closing-hours {
+            font-size: 0.8rem;
+            opacity: 0.85;
+            display: block;
+            margin-top: 0.2rem;
+            font-weight: 500;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #d4922f, #f4b23f);
+            color: #ffffff;
+            box-shadow: 0 10px 30px rgba(212, 146, 47, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(212, 146, 47, 0.5);
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: #d4922f;
+            border: 2px solid #d4922f;
+        }
+
+        .btn-secondary:hover {
+            background: #d4922f;
+            color: #ffffff;
+            transform: translateY(-3px);
+        }
+
+        .hero-visual {
+            position: relative;
+            animation: fadeInRight 1s ease;
+        }
+
+        .network-viz {
+            position: relative;
+            width: 100%;
+            height: 500px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            padding: 3rem;
+            border-radius: 25px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            color: #6c757d;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #f8f9fa;
+        }
+
+        .modal-close:hover {
+            color: #d4922f;
+            background: #fff3e0;
+            transform: rotate(90deg);
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-header h2 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #2c3e50 0%, #d4922f 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-header p {
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+
+        .availability-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .availability-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .availability-item:hover {
+            border-color: #d4922f;
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(212, 146, 47, 0.15);
+        }
+
+        .availability-item:focus-visible {
+            outline: none;
+            border-color: #d4922f;
+            box-shadow: 0 0 0 4px rgba(212, 146, 47, 0.18);
+        }
+
+        /* Space Photo Modal (opens when clicking a space) */
+        .space-photo-modal {
+            display: none;
+            position: fixed;
+            z-index: 4000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(6px);
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+        }
+
+        .space-photo-modal.active {
+            display: flex;
+        }
+
+        .space-photo-content {
+            width: min(980px, 96vw);
+            max-height: 92vh;
+            background: #0b1220;
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            box-shadow: 0 25px 90px rgba(0, 0, 0, 0.55);
+        }
+
+        .space-photo-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 14px;
+            color: #e2e8f0;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .space-photo-title {
+            font-weight: 900;
+            letter-spacing: 0.02em;
+        }
+
+        .space-photo-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .space-photo-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .space-photo-btn {
+            appearance: none;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.08);
+            color: #e2e8f0;
+            padding: 8px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease;
+        }
+
+        .space-photo-btn:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.28);
+        }
+
+        .space-photo-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        .space-photo-body {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 10px;
+        }
+
+        .space-photo-img {
+            width: 100%;
+            height: min(72vh, 640px);
+            object-fit: cover;
+            border-radius: 14px;
+            background: #111827;
+        }
+
+        @media (max-width: 768px) {
+            .space-photo-img {
+                height: min(70vh, 520px);
+            }
+        }
+
+        .availability-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .availability-icon {
+            font-size: 2.5rem;
+        }
+
+        .availability-details h3 {
+            color: #2c3e50;
+            font-size: 1.3rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .availability-details p {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+
+        .availability-count {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #d4922f;
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .availability-count span {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #6c757d;
+            margin-top: 0.3rem;
+        }
+
+        /* Admin Styles */
+        .admin-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #d4922f, #f4b23f);
+            border-radius: 50%;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(212, 146, 47, 0.4);
+            transition: all 0.3s ease;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(212, 146, 47, 0.6);
+        }
+
+        .admin-login-modal {
+            display: none;
+            position: fixed;
+            z-index: 3000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .admin-login-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-login-content {
+            background: #ffffff;
+            padding: 3rem;
+            border-radius: 25px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease;
+            position: relative;
+        }
+
+        .admin-login-content h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .admin-form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .admin-form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .admin-form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .admin-form-group input:focus {
+            outline: none;
+            border-color: #d4922f;
+            box-shadow: 0 0 0 3px rgba(212, 146, 47, 0.1);
+        }
+
+        .admin-login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #d4922f, #f4b23f);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .admin-login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(212, 146, 47, 0.4);
+        }
+
+        .admin-panel {
+            display: none;
+            position: fixed;
+            z-index: 3000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .admin-panel.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-panel-content {
+            background: #ffffff;
+            padding: 3rem;
+            border-radius: 25px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease;
+            position: relative;
+        }
+
+        .admin-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .admin-panel-header h2 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        .admin-close-btn {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #6c757d;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-close-btn:hover {
+            color: #d4922f;
+            transform: rotate(90deg);
+        }
+
+        .admin-item {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+        }
+
+        .admin-item label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .admin-item input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .admin-item input:focus {
+            outline: none;
+            border-color: #d4922f;
+            box-shadow: 0 0 0 3px rgba(212, 146, 47, 0.1);
+        }
+
+        .admin-save-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #d4922f, #f4b23f);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .admin-save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(212, 146, 47, 0.4);
+        }
+
+        .admin-logout-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: #e9ecef;
+            color: #2c3e50;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .admin-logout-btn:hover {
+            background: #d1d5db;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .features {
+            padding: 8rem 5%;
+            background: #ffffff;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 4rem;
+            background: linear-gradient(135deg, #2c3e50 0%, #d4922f 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+        }
+
+        .feature-card {
+            background: #ffffff;
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #d4922f, #f4b23f);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: #d4922f;
+            box-shadow: 0 20px 40px rgba(212, 146, 47, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #d4922f;
+        }
+
+        .feature-card p {
+            color: #6c757d;
+            line-height: 1.6;
+        }
+
+        .gallery {
+            padding: 8rem 5%;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            height: 300px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .gallery-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(212, 146, 47, 0.6), rgba(244, 178, 63, 0.4));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+
+        .gallery-item:hover::before {
+            opacity: 1;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .stats-section {
+            padding: 6rem 5%;
+            background: linear-gradient(135deg, #d4922f, #f4b23f);
+            color: #ffffff;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .stat-item p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        .pricing-section {
+            padding: 8rem 5%;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .pricing-subtitle {
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto 2.5rem;
+            color: #6c757d;
+            font-size: 1.15rem;
+            line-height: 1.7;
+        }
+
+        .rates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 3rem auto 0;
+        }
+
+        .rate-card {
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(15, 23, 42, 0.06);
+        }
+
+        .rate-card-header {
+            padding: 1.5rem 1.75rem;
+            color: #ffffff;
+            background: linear-gradient(135deg, #2c3e50 0%, #d4922f 100%);
+        }
+
+        .rate-card-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .rate-card-subtitle {
+            margin-top: 0.35rem;
+            opacity: 0.92;
+            font-size: 0.95rem;
+        }
+
+        .rate-card-body {
+            padding: 1.5rem 1.75rem;
+        }
+
+        .rate-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1rem;
+        }
+
+        .rate-table tr + tr td {
+            border-top: 1px solid rgba(15, 23, 42, 0.08);
+        }
+
+        .rate-table td {
+            padding: 0.9rem 0;
+            vertical-align: top;
+        }
+
+        .rate-table td:last-child {
+            text-align: right;
+            font-weight: 800;
+            color: #2c3e50;
+            white-space: nowrap;
+        }
+
+        .rate-note {
+            margin-top: 1.25rem;
+            padding: 1rem 1.1rem;
+            border-radius: 14px;
+            background: #f8f9fa;
+            border: 1px solid rgba(15, 23, 42, 0.06);
+            color: #6c757d;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .pricing-card {
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .pricing-header {
+            padding: 2rem;
+            text-align: center;
+            color: #ffffff;
+            position: relative;
+        }
+
+        .pricing-card.basic .pricing-header {
+            background: linear-gradient(135deg, #9b6b8e 0%, #7a5370 100%);
+        }
+
+        .pricing-card.standard .pricing-header {
+            background: linear-gradient(135deg, #4db8a8 0%, #2d9a8f 100%);
+        }
+
+        .pricing-card.premium .pricing-header {
+            background: linear-gradient(135deg, #e89453 0%, #d67d3f 100%);
+        }
+
+        .pricing-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .pricing-price {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-currency {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .pricing-monthly {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .pricing-features {
+            padding: 2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pricing-card.basic .pricing-features {
+            background: linear-gradient(135deg, #9b6b8e 0%, #7a5370 100%);
+            color: #ffffff;
+        }
+
+        .pricing-card.standard .pricing-features {
+            background: linear-gradient(135deg, #4db8a8 0%, #2d9a8f 100%);
+            color: #ffffff;
+        }
+
+        .pricing-card.premium .pricing-features {
+            background: linear-gradient(135deg, #e89453 0%, #d67d3f 100%);
+            color: #ffffff;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-bottom: 2rem;
+            flex: 1;
+        }
+
+        .feature-list li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .pricing-footer {
+            padding: 1.5rem 2rem;
+        }
+
+        .pricing-cta {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .pricing-card.basic .pricing-cta {
+            color: #7a5370;
+        }
+
+        .pricing-card.standard .pricing-cta {
+            color: #2d9a8f;
+        }
+
+        .pricing-card.premium .pricing-cta {
+            color: #d67d3f;
+        }
+
+        .pricing-cta:hover {
+            background: #ffffff;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-section {
+            padding: 8rem 5% 6rem;
+            background: #ffffff;
+        }
+
+        .cta-section h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            background: linear-gradient(135deg, #2c3e50 0%, #d4922f 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cta-section > p {
+            font-size: 1.3rem;
+            color: #6c757d;
+            margin-bottom: 4rem;
+            text-align: center;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .contact-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #d4922f, #f4b23f);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .contact-item:hover::before {
+            transform: scaleX(1);
+        }
+
+        .contact-item:hover {
+            transform: translateY(-5px);
+            border-color: #d4922f;
+            box-shadow: 0 15px 35px rgba(212, 146, 47, 0.15);
+        }
+
+        .contact-icon {
+            font-size: 3rem;
+            margin-bottom: 1.3rem;
+            display: inline-block;
+        }
+
+        .contact-item h3 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .contact-item a {
+            color: #d4922f;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .contact-item a:hover {
+            color: #f4b23f;
+            transform: scale(1.05);
+        }
+
+        .contact-desc {
+            color: #6c757d;
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+        }
+
+        .map-container {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            height: 100%;
+            min-height: 400px;
+            border: 2px solid #e9ecef;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            min-height: 400px;
+        }
+
+        footer {
+            padding: 3rem 5%;
+            background: #f8f9fa;
+            border-top: 2px solid #e9ecef;
+            text-align: center;
+            color: #6c757d;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 1024px) {
+            .contact-wrapper {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .contact-info {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 1024px) {
+            .contact-wrapper {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .contact-info {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                padding: 1.2rem 5%;
+            }
+
+            .status-sign {
+                display: none;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .status-sign {
+                min-width: 0;
+                padding: 0.8rem 1.2rem;
+                font-size: 0.95rem;
+                gap: 0.8rem;
+            }
+
+            .status-details {
+                gap: 0.15rem;
+            }
+
+            .status-datetime {
+                font-size: 0.9rem;
+                line-height: 1.4;
+                display: flex;
+                flex-direction: column;
+                gap: 0.15rem;
+            }
+
+            .status-date {
+                font-size: 0.85rem;
+                display: block;
+            }
+
+            .status-time {
+                font-size: 0.85rem;
+            }
+
+            .status-label {
+                font-size: 1rem;
+            }
+
+            .status-indicator {
+                width: 11px;
+                height: 11px;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                padding: 6rem 2rem 2rem;
+                gap: 2rem;
+                transition: right 0.3s ease;
+                box-shadow: -5px 0 20px rgba(0, 0, 0, 0.1);
+                z-index: 999;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links a {
+                font-size: 1.1rem;
+                padding: 0.8rem 0;
+            }
+
+            .hero-content {
+                grid-template-columns: 1fr;
+                padding-top: 9rem;
+                padding-left: 4%;
+                padding-right: 4%;
+                gap: 2.5rem;
+            }
+
+            .hero-text h1 {
+                font-size: 2.6rem;
+                line-height: 1.2;
+            }
+
+            .hero-text p {
+                font-size: 1.15rem;
+                margin-bottom: 1.8rem;
+            }
+
+            .hero-status-sign {
+                display: flex;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .btn {
+                text-align: center;
+                width: 100%;
+                padding: 1.1rem 2rem;
+                font-size: 1.1rem;
+            }
+
+            .network-viz {
+                height: 250px;
+            }
+
+            .section-title {
+                font-size: 2.3rem;
+                margin-bottom: 3rem;
+            }
+
+            .features {
+                padding: 4rem 4%;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .feature-card {
+                padding: 2.3rem;
+                border-radius: 15px;
+            }
+
+            .feature-icon {
+                font-size: 3rem;
+                margin-bottom: 1.2rem;
+            }
+
+            .feature-card h3 {
+                font-size: 1.5rem;
+            }
+
+            .feature-card p {
+                font-size: 1.05rem;
+            }
+
+            .gallery {
+                padding: 4rem 4%;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .gallery-item {
+                height: 240px;
+                border-radius: 12px;
+            }
+
+            .stats-section {
+                padding: 4rem 4%;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+
+            .stat-item h3 {
+                font-size: 2.7rem;
+            }
+
+            .stat-item p {
+                font-size: 1.15rem;
+            }
+
+            .cta-section {
+                padding: 4rem 4%;
+            }
+
+            .cta-section h2 {
+                font-size: 2.1rem;
+            }
+
+            .cta-section > p {
+                font-size: 1.15rem;
+                margin-bottom: 2.5rem;
+            }
+
+            .contact-wrapper {
+                gap: 2.5rem;
+            }
+
+            .contact-info {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .contact-item {
+                padding: 1.5rem;
+                border-radius: 12px;
+            }
+
+            .contact-icon {
+                font-size: 2.3rem;
+                margin-bottom: 1rem;
+            }
+
+            .contact-item h3 {
+                font-size: 1.3rem;
+            }
+
+            .contact-item a {
+                font-size: 1.05rem;
+            }
+
+            .map-container {
+                min-height: 300px;
+                border-radius: 12px;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .logo img {
+                width: 32px;
+                height: 32px;
+            }
+
+            .modal-content {
+                padding: 1.5rem;
+                border-radius: 20px;
+            }
+
+            .modal-header h2 {
+                font-size: 1.8rem;
+            }
+
+            .modal-header p {
+                font-size: 0.95rem;
+            }
+
+            .availability-icon {
+                font-size: 2rem;
+            }
+
+            .availability-count {
+                font-size: 1.8rem;
+            }
+
+            .availability-details h3 {
+                font-size: 1.1rem;
+            }
+
+            .availability-details p {
+                font-size: 0.85rem;
+            }
+
+            .admin-panel-content {
+                padding: 2rem;
+                max-width: 90%;
+            }
+
+            .admin-panel-header h2 {
+                font-size: 1.6rem;
+            }
+
+            .admin-item {
+                padding: 1.2rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .admin-item label {
+                font-size: 1rem;
+            }
+
+            .admin-item input {
+                padding: 0.7rem;
+                font-size: 1rem;
+            }
+
+            .toggle-container {
+                gap: 0.8rem;
+            }
+
+            .toggle-switch {
+                width: 50px;
+                height: 30px;
+            }
+
+            .toggle-switch::before {
+                width: 26px;
+                height: 26px;
+            }
+
+            .toggle-switch:checked::before {
+                left: 22px;
+            }
+
+            footer {
+                padding: 2rem 4%;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav {
+                padding: 1.1rem 3%;
+            }
+
+            .status-sign {
+                padding: 0.7rem 1rem;
+                font-size: 0.9rem;
+                gap: 0.6rem;
+                min-width: 0;
+                flex-wrap: wrap;
+            }
+
+            .status-details {
+                gap: 0.1rem;
+            }
+
+            .status-indicator {
+                width: 9px;
+                height: 9px;
+            }
+
+            .status-datetime {
+                font-size: 0.85rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.1rem;
+            }
+
+            .status-date {
+                font-size: 0.8rem;
+                white-space: nowrap;
+                display: block;
+            }
+
+            .status-time {
+                font-size: 0.8rem;
+                font-weight: 600;
+            }
+
+            .logo {
+                font-size: 1rem;
+            }
+
+            .logo img {
+                width: 28px;
+                height: 28px;
+            }
+
+            .mobile-menu-toggle span {
+                width: 20px;
+                height: 2px;
+            }
+
+            .hero-content {
+                padding-top: 7rem;
+                padding-left: 3%;
+                padding-right: 3%;
+                gap: 2rem;
+            }
+
+            .hero-text h1 {
+                font-size: 2.1rem;
+                line-height: 1.2;
+            }
+
+            .hero-text p {
+                font-size: 1.05rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .hero-status-sign {
+                display: flex;
+                margin: 1.5rem auto;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+
+            .btn {
+                padding: 1rem 1.8rem;
+                font-size: 1.05rem;
+                border-radius: 40px;
+            }
+
+            .network-viz {
+                height: 200px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+                margin-bottom: 2.5rem;
+            }
+
+            .features {
+                padding: 3.5rem 3%;
+            }
+
+            .features-grid {
+                gap: 1.5rem;
+            }
+
+            .feature-card {
+                padding: 1.8rem;
+                border-radius: 12px;
+            }
+
+            .feature-icon {
+                font-size: 2.4rem;
+                margin-bottom: 1rem;
+            }
+
+            .feature-card h3 {
+                font-size: 1.3rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .feature-card p {
+                font-size: 0.95rem;
+                line-height: 1.6;
+            }
+
+            .gallery {
+                padding: 3.5rem 3%;
+            }
+
+            .gallery-grid {
+                gap: 1.3rem;
+            }
+
+            .gallery-item {
+                height: 220px;
+                border-radius: 10px;
+            }
+
+            .stats-section {
+                padding: 3.5rem 3%;
+            }
+
+            .stats-grid {
+                gap: 2rem;
+            }
+
+            .stat-item h3 {
+                font-size: 2.3rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .stat-item p {
+                font-size: 1rem;
+            }
+
+            .cta-section {
+                padding: 3.5rem 3%;
+            }
+
+            .cta-section h2 {
+                font-size: 1.9rem;
+                margin-bottom: 1rem;
+            }
+
+            .cta-section > p {
+                font-size: 1.05rem;
+                margin-bottom: 2rem;
+            }
+
+            .contact-wrapper {
+                gap: 2rem;
+            }
+
+            .contact-info {
+                gap: 1.2rem;
+            }
+
+            .contact-item {
+                padding: 1.3rem;
+                border-radius: 10px;
+            }
+
+            .contact-icon {
+                font-size: 2.2rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .contact-item h3 {
+                font-size: 1.2rem;
+                margin-bottom: 0.7rem;
+            }
+
+            .contact-item a {
+                font-size: 1rem;
+                margin-bottom: 0.4rem;
+            }
+
+            .contact-desc {
+                font-size: 0.9rem;
+            }
+
+            .map-container {
+                min-height: 250px;
+                border-radius: 10px;
+            }
+
+            .modal-content {
+                padding: 1.2rem;
+                border-radius: 15px;
+                max-width: 95%;
+            }
+
+            .modal-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .modal-header p {
+                font-size: 0.85rem;
+            }
+
+            .modal-close {
+                font-size: 1.5rem;
+                width: 35px;
+                height: 35px;
+                top: 1rem;
+                right: 1rem;
+            }
+
+            .availability-item {
+                padding: 1rem;
+                border-radius: 10px;
+                flex-direction: column;
+                text-align: center;
+                gap: 0.8rem;
+            }
+
+            .availability-info {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .availability-icon {
+                font-size: 1.8rem;
+            }
+
+            .availability-details h3 {
+                font-size: 1rem;
+            }
+
+            .availability-details p {
+                font-size: 0.8rem;
+            }
+
+            .availability-count {
+                font-size: 1.6rem;
+            }
+
+            .admin-btn {
+                width: 55px;
+                height: 55px;
+                bottom: 20px;
+                right: 20px;
+                font-size: 1.3rem;
+            }
+
+            .admin-panel-content {
+                padding: 1.5rem;
+                max-width: 95%;
+            }
+
+            .admin-panel-header {
+                flex-direction: column;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .admin-panel-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .admin-item {
+                padding: 1rem;
+                margin-bottom: 1.2rem;
+            }
+
+            .admin-item label {
+                font-size: 0.95rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .admin-item input {
+                padding: 0.6rem;
+                font-size: 0.95rem;
+            }
+
+            .admin-save-btn,
+            .admin-logout-btn {
+                padding: 0.8rem;
+                font-size: 0.95rem;
+            }
+
+            .toggle-container {
+                gap: 0.6rem;
+            }
+
+            .toggle-switch {
+                width: 45px;
+                height: 28px;
+            }
+
+            .toggle-switch::before {
+                width: 24px;
+                height: 24px;
+            }
+
+            .toggle-switch:checked::before {
+                left: 19px;
+            }
+
+            .toggle-text {
+                min-width: 60px;
+                padding: 0.4rem 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            footer {
+                padding: 1.5rem 3%;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .nav {
+                padding: 0.8rem 3%;
+            }
+
+            .status-sign {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.7rem;
+            }
+
+            .hero-content {
+                padding-top: 5rem;
+            }
+
+            .hero-text h1 {
+                font-size: 1.5rem;
+            }
+
+            .hero-text p {
+                font-size: 0.85rem;
+            }
+
+            .btn {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.85rem;
+            }
+
+            .network-viz {
+                height: 150px;
+            }
+
+            .section-title {
+                font-size: 1.4rem;
+            }
+
+            .feature-card {
+                padding: 1.2rem;
+            }
+
+            .modal-content {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Button -->
+    <button class="admin-btn" id="adminBtn" title="Admin Panel">⚙️</button>
+
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" class="admin-login-modal">
+        <div class="admin-login-content">
+            <h2>Admin Login</h2>
+            <div class="admin-form-group">
+                <label for="adminPassword">Password:</label>
+                <input type="password" id="adminPassword" placeholder="Enter admin password">
+            </div>
+            <button class="admin-login-btn" id="adminLoginBtn">Login</button>
+        </div>
+    </div>
+
+    <!-- Admin Panel Modal -->
+    <div id="adminPanel" class="admin-panel">
+        <div class="admin-panel-content">
+            <div class="admin-panel-header">
+                <h2>Manage Availability</h2>
+                <button class="admin-close-btn" id="adminPanelCloseBtn">&times;</button>
+            </div>
+            <div id="syncStatus" style="padding: 8px 12px; margin: 0 16px 12px; background: #e0f2fe; border-radius: 8px; font-size: 0.85rem; color: #0369a1;"></div>
+            
+            <div class="admin-item">
+                <label>Business Status</label>
+                <div class="toggle-container">
+                    <input type="checkbox" id="businessStatusToggle" class="toggle-switch">
+                    <span class="toggle-text" id="toggleText">OPEN</span>
+                </div>
+            </div>
+
+            <div class="admin-item">
+                <label for="regularOfficeCount">Regular Office</label>
+                <input type="number" id="regularOfficeCount" min="0" placeholder="Enter number of available offices">
+            </div>
+
+            <div class="admin-item">
+                <label for="socialSpaceCount">Social Space</label>
+                <input type="number" id="socialSpaceCount" min="0" placeholder="Enter number of available spaces">
+            </div>
+
+            <div class="admin-item">
+                <label for="privateSpaceCount">Private Space</label>
+                <input type="number" id="privateSpaceCount" min="0" placeholder="Enter number of available spaces">
+            </div>
+
+            <div class="admin-item">
+                <label for="conferenceRoomCount">Conference Room</label>
+                <input type="number" id="conferenceRoomCount" min="0" placeholder="Enter number of available rooms">
+            </div>
+
+            <button class="admin-save-btn" id="adminSaveBtn">Save Changes</button>
+            <button class="admin-logout-btn" id="adminLogoutBtn">Logout</button>
+        </div>
+    </div>
+
+    <nav class="nav" id="navbar">
+        <div class="logo">
+            <img src="images/brlogo.jpg" alt="Brain Wave logo" />
+            <span>BRAINWAVE</span>
+        </div>
+        <div class="status-sign" id="statusSign">
+            <span class="status-indicator"></span>
+            <div class="status-details">
+                <div class="status-top">
+                    <span class="status-label" id="statusText">WE'RE OPEN</span>
+                    <div class="status-datetime">
+                        <div class="status-date" id="currentDate">Mon, Jan 15</div>
+                        <div class="status-time" id="currentTime">00:00:00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mobile-menu-toggle" id="mobileMenuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#gallery">Gallery</a></li>
+            <li><a id="availabilityLink">Availability</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Availability Modal -->
+    <div id="availabilityModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" id="modalClose">&times;</span>
+            <div class="modal-header">
+                <h2>Space Availability</h2>
+                <p>Choose the perfect workspace for your needs</p>
+            </div>
+            <div class="availability-list">
+                <div class="availability-item" tabindex="0" role="button" data-space="regularOffice" aria-label="Regular Office photos">
+                    <div class="availability-info">
+                        <div class="availability-icon">💼</div>
+                        <div class="availability-details">
+                            <h3>Regular Office</h3>
+                            <p>Private individual offices</p>
+                        </div>
+                    </div>
+                    <div class="availability-count">
+                        11
+                        <span>Available</span>
+                    </div>
+                </div>
+                <div class="availability-item" tabindex="0" role="button" data-space="socialSpace" aria-label="Social Space photos">
+                    <div class="availability-info">
+                        <div class="availability-icon">👥</div>
+                        <div class="availability-details">
+                            <h3>Social Space</h3>
+                            <p>Collaborative area</p>
+                        </div>
+                    </div>
+                    <div class="availability-count">
+                        1
+                        <span>Available</span>
+                    </div>
+                </div>
+                <div class="availability-item" tabindex="0" role="button" data-space="privateSpace" aria-label="Private Space photos">
+                    <div class="availability-info">
+                        <div class="availability-icon">🔒</div>
+                        <div class="availability-details">
+                            <h3>Private Space</h3>
+                            <p>Exclusive private room</p>
+                        </div>
+                    </div>
+                    <div class="availability-count">
+                        1
+                        <span>Available</span>
+                    </div>
+                </div>
+                <div class="availability-item" tabindex="0" role="button" data-space="conferenceRoom" aria-label="Conference Room photos">
+                    <div class="availability-info">
+                        <div class="availability-icon">🎯</div>
+                        <div class="availability-details">
+                            <h3>Conference Room</h3>
+                            <p>Fully-equipped meeting room</p>
+                        </div>
+                    </div>
+                    <div class="availability-count">
+                        1
+                        <span>Available</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Space Photo Modal (opens when clicking a space) -->
+    <div id="spacePhotoModal" class="space-photo-modal" role="dialog" aria-modal="true" aria-labelledby="spacePhotoTitle">
+        <div class="space-photo-content">
+            <div class="space-photo-header">
+                <div class="space-photo-title" id="spacePhotoTitle">Space Photos</div>
+                <div class="space-photo-actions">
+                    <div class="space-photo-nav" id="spacePhotoNav">
+                        <button class="space-photo-btn" id="spacePrevBtn" type="button">Prev</button>
+                        <button class="space-photo-btn" id="spaceNextBtn" type="button">Next</button>
+                    </div>
+                    <button class="space-photo-btn space-photo-close" id="spacePhotoCloseBtn" type="button" aria-label="Close">&times;</button>
+                </div>
+            </div>
+            <div class="space-photo-body">
+                <img id="spacePhotoImg" class="space-photo-img" src="images/Office2.jpg" alt="Space photo">
+            </div>
+        </div>
+    </div>
+
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Unlock Your Full Potential</h1>
+                <p>Experience premium study spaces designed for focus, productivity, and success. Join the Brainwave community today.</p>
+                <div class="hero-status-sign" id="heroStatusSign">
+                    <span class="status-indicator"></span>
+                    <div class="hero-status-details">
+                        <span class="hero-status-text" id="heroStatusText">WE'RE OPEN</span>
+                        <div class="hero-status-datetime">
+                            <span class="hero-status-date" id="heroStatusDate">Mon, Jan 15</span>
+                            <span class="hero-status-time" id="heroStatusTime">00:00</span>
+                        </div>
+                        <span class="hero-closing-hours"></span>
+                    </div>
+                </div>
+                <div class="cta-buttons">
+                    <a href="#contact" class="btn btn-primary">Book Your Space</a>
+                    <a id="checkAvailabilityBtn" class="btn btn-secondary">Quick Check</a>
+                    <a
+                        href="https://www.canva.com/design/DAG-6qhcFSc/Mt8Rr2hCUjMhRzYus6B9rQ/edit?utm_content=DAG-6qhcFSc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton"
+                        class="btn btn-secondary"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >Check Availability</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <canvas id="networkCanvas" class="network-viz"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <h2 class="section-title">Why Choose Brainwave?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Private Study Pods</h3>
+                <p>Individual spaces designed for maximum concentration and productivity.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💼</div>
+                <h3>Meeting Rooms</h3>
+                <p>Professional conference rooms equipped with modern technology for group discussions.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <h3>Open Study Areas</h3>
+                <p>Collaborative spaces with ergonomic furniture and natural lighting for extended study sessions.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">☕</div>
+                <h3>Refreshment Zone</h3>
+                <p>Complimentary coffee to keep you energized throughout your study time.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌐</div>
+                <h3>High-Speed WiFi</h3>
+                <p>Ultra-fast internet connectivity ensuring seamless online research and virtual meetings.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>22/7 Access</h3>
+                <p>Study on your schedule with round-the-clock access and secure entry systems.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h3>500+</h3>
+                <p>Happy Members</p>
+            </div>
+            <div class="stat-item">
+                <h3>22/7</h3>
+                <p>Open Access</p>
+            </div>
+            <div class="stat-item">
+                <h3>100%</h3>
+                <p>Satisfaction Rate</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing-section" id="pricing">
+        <h2 class="section-title">Yearly Plan - Business Address Packages</h2>
+        <div class="pricing-grid">
+            <!-- Basic Plan -->
+            <div class="pricing-card basic">
+                <div class="pricing-header">
+                    <div class="pricing-title">Basic</div>
+                    <div>
+                        <span class="pricing-currency">₱</span><span class="pricing-price">15,000</span>
+                    </div>
+                    <div class="pricing-monthly">For as low as ₱1,250/month</div>
+                </div>
+                <div class="pricing-features">
+                    <ul class="feature-list">
+                        <li>✓ Use of our coworking space address for DTI, SEC, BIR, and bank registration</li>
+                        <li>✓ Mail and parcel receiving (pickup only during scheduled time)</li>
+                    </ul>
+                    <div class="pricing-footer">
+                        <button class="pricing-cta" onclick="location.href='tel:09754051027'">Contact Us</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Standard Plan -->
+            <div class="pricing-card standard">
+                <div class="pricing-header">
+                    <div class="pricing-title">Standard</div>
+                    <div>
+                        <span class="pricing-currency">₱</span><span class="pricing-price">18,000</span>
+                    </div>
+                    <div class="pricing-monthly">For as low as ₱1,500/month</div>
+                </div>
+                <div class="pricing-features">
+                    <ul class="feature-list">
+                        <li>✓ All features of Basic</li>
+                        <li>✓ Mail & parcel handling with SMS notification</li>
+                        <li>✓ Flexible pickup during office hours (22/7)</li>
+                        <li>✓ Private workspace use: 6 hours/month included</li>
+                    </ul>
+                    <div class="pricing-footer">
+                        <button class="pricing-cta" onclick="location.href='tel:09754051027'">Contact Us</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Premium Plan -->
+            <div class="pricing-card premium">
+                <div class="pricing-header">
+                    <div class="pricing-title">Premium</div>
+                    <div>
+                        <span class="pricing-currency">₱</span><span class="pricing-price">21,000</span>
+                    </div>
+                    <div class="pricing-monthly">For as low as ₱1,750/month</div>
+                </div>
+                <div class="pricing-features">
+                    <ul class="feature-list">
+                        <li>✓ All features of Standard</li>
+                        <li>✓ Mail & parcel forwarding within Cagayan de Oro (courier fees separate)</li>
+                        <li>✓ Company name listed on coworking directory</li>
+                        <li>✓ Priority support for mail and booking requests</li>
+                        <li>✓ Solo workspace or private workspace use: 8 hours/month included</li>
+                    </ul>
+                    <div class="pricing-footer">
+                        <button class="pricing-cta" onclick="location.href='tel:09754051027'">Contact Us</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title" style="margin-top: 5rem;">Workspace Rates & Packages</h2>
+        <p class="pricing-subtitle">Operating hours: <strong>8:00 AM to 6:00 AM</strong>. Choose hourly rates or packages for private and shared workspaces.</p>
+
+        <div class="rates-grid">
+            <div class="rate-card">
+                <div class="rate-card-header">
+                    <div class="rate-card-title">Private & Shared Workspaces</div>
+                    <div class="rate-card-subtitle">Rates</div>
+                </div>
+                <div class="rate-card-body">
+                    <table class="rate-table">
+                        <tr><td>One (1) Hour</td><td>₱ 60</td></tr>
+                        <tr><td>RATE A (4–6 hours)</td><td>₱ 185</td></tr>
+                        <tr><td>RATE B (7–8 hours)</td><td>₱ 220</td></tr>
+                        <tr><td>RATE C (9–12 hours)</td><td>₱ 230</td></tr>
+                        <tr><td>RATE D (13 hours above)</td><td>₱ 260</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="rate-card">
+                <div class="rate-card-header">
+                    <div class="rate-card-title">Conference Room</div>
+                    <div class="rate-card-subtitle">Exclusive use</div>
+                </div>
+                <div class="rate-card-body">
+                    <table class="rate-table">
+                        <tr><td>One (1) Hour</td><td>₱ 600</td></tr>
+                        <tr><td>4 hours (8–10 pax)</td><td>₱ 1,700</td></tr>
+                        <tr><td>*Extension</td><td>₱ 500/hr</td></tr>
+                        <tr><td>*Excess</td><td>₱ 150/pax</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="rate-card">
+                <div class="rate-card-header">
+                    <div class="rate-card-title">Solo Workspace</div>
+                    <div class="rate-card-subtitle">Solo workspace and conference room</div>
+                </div>
+                <div class="rate-card-body">
+                    <table class="rate-table">
+                        <tr><td>One (1) Hour</td><td>₱ 65</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="rate-card">
+                <div class="rate-card-header">
+                    <div class="rate-card-title">Packages</div>
+                    <div class="rate-card-subtitle">Private and shared workspaces</div>
+                </div>
+                <div class="rate-card-body">
+                    <table class="rate-table">
+                        <tr><td>Reviewee</td><td>₱ 4,800.00</td></tr>
+                        <tr><td>Student</td><td>₱ 3,600.00</td></tr>
+                        <tr><td>300hrs – 2 Months</td><td>₱ 5,100.00</td></tr>
+                        <tr><td>200hrs – 1 Month</td><td>₱ 3,800.00</td></tr>
+                        <tr><td>50hrs – 1 Week</td><td>₱ 1,000.00</td></tr>
+                    </table>
+                    <div class="rate-note">
+                        These packages are available exclusively for private and shared workspaces. 300-hour and 200-hour packages are non-reserved seating. Student and Reviewee packages come with guaranteed reserved seats. These packages apply to usage between 8:00 AM to 6:00 AM. Usage beyond the regular operating schedule may incur additional fees.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="gallery" id="gallery">
+        <h2 class="section-title">Our Premium Facilities</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img src="images/Conference_room.jpg" alt="Private Study Desk" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div class="gallery-item">
+                <img src="images/Office1.jpg" alt="Meeting Room" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div class="gallery-item">
+                <img src="images/Office2.jpg" alt="Study Pods" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div class="gallery-item">
+                <img src="images/Social_office.jpg" alt="Open Workspace" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div class="gallery-item">
+                <img src="images/solo_office.jpg" alt="Refreshment Area" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div class="gallery-item">
+                <img src="images/Conference_room.jpg" alt="Collaboration Zone" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section" id="contact">
+        <h2>Get In Touch With Us</h2>
+        <p>Join hundreds of students and professionals who trust Brainwave for their study and work needs.</p>
+        
+        <div class="contact-wrapper">
+            <div class="contact-info">
+                <div class="contact-item">
+                    <div class="contact-icon">📱</div>
+                    <h3>Phone</h3>
+                    <a href="tel:09754051027">0975 405 1027</a>
+                    <p class="contact-desc">Call us anytime</p>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">✉️</div>
+                    <h3>Email</h3>
+                    <a href="mailto:brainwavecws@gmail.com">brainwavecws@gmail.com</a>
+                    <p class="contact-desc">Send us a message</p>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">👥</div>
+                    <h3>Facebook</h3>
+                    <a href="https://www.facebook.com/profile.php?id=61572453336400" target="_blank">Visit Our Page</a>
+                    <p class="contact-desc">Follow for updates</p>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">📍</div>
+                    <h3>Location</h3>
+                    <a href="https://maps.app.goo.gl/5B3sY7fsr9ML5Bji9" target="_blank">View on Map</a>
+                    <p class="contact-desc">Come visit us</p>
+                </div>
+            </div>
+            
+            <div class="map-container">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d247.89654842728353!2d124.64477287253582!3d8.489116336682766!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x32fff2dcaf2dc417%3A0x24ee146dadf03641!2sBrain%20Wave%20Cagayan%20Working%20Space!5e0!3m2!1sen!2sph!4v1737025891234!5m2!1sen!2sph"
+                    width="100%" 
+                    height="100%" 
+                    style="border:0; border-radius: 15px;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Brainwave Study Hub. All rights reserved.</p>
+    </footer>
+
+    <!-- Firebase SDK for real-time sync across devices -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
+    <script>
+        // Business Hours (24-hour format)
+        // Modify these to set your business hours
+        const BUSINESS_HOURS = {
+            openTime: 6,      // 6 AM
+            closeTime: 23,    // 11 PM
+            daysOpen: [0, 1, 2, 3, 4, 5, 6] // 0-6 = Sunday-Saturday (all days open)
+        };
+
+        // Business status (OPEN/CLOSED) - kept in a shared cloud store (like availability)
+        // Initialize from localStorage first, then cloud listener will keep it updated.
+        var currentManualStatus = (localStorage.getItem('brainwaveManualStatus') ?? 'true') === 'true';
+
+        // Format hour to 12-hour format with AM/PM
+        function formatHour(hour) {
+            if (hour === 0) return '12:00 AM';
+            if (hour < 12) return `${hour}:00 AM`;
+            if (hour === 12) return '12:00 PM';
+            return `${hour - 12}:00 PM`;
+        }
+
+        // Format date
+        function formatDate(date) {
+            const options = { weekday: 'short', month: 'short', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        // Update status sign
+        function updateStatusSign() {
+            const statusSign = document.getElementById('statusSign');
+            const statusText = document.getElementById('statusText');
+            const heroStatusSign = document.getElementById('heroStatusSign');
+            const heroStatusText = document.getElementById('heroStatusText');
+            const heroStatusTime = document.getElementById('heroStatusTime');
+            const heroStatusDate = document.getElementById('heroStatusDate');
+            const currentTime = document.getElementById('currentTime');
+            const currentDate = document.getElementById('currentDate');
+            
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            // Update time with seconds
+            currentTime.textContent = `${hours}:${minutes}:${seconds}`;
+            
+            // Update time on hero status
+            if (heroStatusTime) {
+                heroStatusTime.textContent = `${hours}:${minutes}`;
+            }
+            
+            // Update date on hero status
+            if (heroStatusDate) {
+                heroStatusDate.textContent = formatDate(now);
+            }
+            
+            // Update date
+            currentDate.textContent = formatDate(now);
+            
+            // Get manual status (synced across devices)
+            const manualStatus = currentManualStatus === true;
+            const currentHour = now.getHours();
+            
+            // Check if it's closing time (6 AM - 8 AM)
+            const isClosingTime = currentHour >= 6 && currentHour < 8;
+            
+            // Determine if open or closed
+            const isOpen = !isClosingTime && manualStatus === true;
+
+            if (isOpen) {
+                statusSign.classList.remove('closed');
+                statusSign.classList.add('open');
+                statusText.textContent = "WE'RE OPEN";
+                
+                if (heroStatusSign) {
+                    heroStatusSign.classList.remove('closed');
+                    heroStatusSign.classList.add('open');
+                    heroStatusText.textContent = "WE'RE OPEN";
+                }
+            } else {
+                statusSign.classList.remove('open');
+                statusSign.classList.add('closed');
+                statusText.textContent = 'CLOSED';
+                
+                if (heroStatusSign) {
+                    heroStatusSign.classList.remove('open');
+                    heroStatusSign.classList.add('closed');
+                    heroStatusText.textContent = 'CLOSED';
+                }
+            }
+        }
+
+        // Update status on page load and every second
+        updateStatusSign();
+        setInterval(updateStatusSign, 1000); // Update every second
+
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            mobileMenuToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenuToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.nav')) {
+                mobileMenuToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            }
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Animated network visualization
+        const canvas = document.getElementById('networkCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
+
+        resizeCanvas();
+
+        const nodes = [];
+        const nodeCount = window.innerWidth < 768 ? 20 : 30;
+
+        class Node {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = 4;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = '#d4922f';
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = '#d4922f';
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        for (let i = 0; i < nodeCount; i++) {
+            nodes.push(new Node());
+        }
+
+        function drawConnections() {
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const dx = nodes[i].x - nodes[j].x;
+                    const dy = nodes[i].y - nodes[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 150) {
+                        ctx.beginPath();
+                        ctx.moveTo(nodes[i].x, nodes[i].y);
+                        ctx.lineTo(nodes[j].x, nodes[j].y);
+                        ctx.strokeStyle = `rgba(212, 146, 47, ${0.6 - distance / 250})`;
+                        ctx.lineWidth = 1.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            nodes.forEach(node => {
+                node.update();
+                node.draw();
+            });
+
+            drawConnections();
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        });
+
+        // Check Availability Button Handler
+        const checkAvailabilityBtn = document.getElementById('checkAvailabilityBtn');
+        const availabilityModal = document.getElementById('availabilityModal');
+        const modalClose = document.getElementById('modalClose');
+
+        const SPACE_MEDIA = {
+            conferenceRoom: {
+                title: 'Conference Room',
+                images: [{ src: 'images/Conference_room.jpg', alt: 'Conference Room' }]
+            },
+            privateSpace: {
+                title: 'Private Space',
+                images: [{ src: 'images/solo_office.jpg', alt: 'Private Space' }]
+            },
+            socialSpace: {
+                title: 'Social Space',
+                images: [{ src: 'images/Social_office.jpg', alt: 'Social Space' }]
+            },
+            regularOffice: {
+                title: 'Regular Office',
+                images: [
+                    { src: 'images/Office2.jpg', alt: 'Regular Office photo 1' },
+                    { src: 'images/Office1.jpg', alt: 'Regular Office photo 2' }
+                ]
+            }
+        };
+
+        // Space photo modal controls
+        const spacePhotoModal = document.getElementById('spacePhotoModal');
+        const spacePhotoTitle = document.getElementById('spacePhotoTitle');
+        const spacePhotoImg = document.getElementById('spacePhotoImg');
+        const spacePhotoNav = document.getElementById('spacePhotoNav');
+        const spacePrevBtn = document.getElementById('spacePrevBtn');
+        const spaceNextBtn = document.getElementById('spaceNextBtn');
+        const spacePhotoCloseBtn = document.getElementById('spacePhotoCloseBtn');
+
+        let activeSpaceKey = 'regularOffice';
+        let activeSpaceIndex = 0;
+
+        function renderSpacePhoto() {
+            const entry = SPACE_MEDIA[activeSpaceKey] || SPACE_MEDIA.regularOffice;
+            const total = entry.images.length;
+            const img = entry.images[activeSpaceIndex] || entry.images[0];
+
+            if (spacePhotoTitle) spacePhotoTitle.textContent = entry.title;
+            if (spacePhotoImg) {
+                spacePhotoImg.src = img.src;
+                spacePhotoImg.alt = img.alt;
+            }
+            if (spacePhotoNav) {
+                spacePhotoNav.style.display = total > 1 ? 'inline-flex' : 'none';
+            }
+        }
+
+        function openSpacePhotoModal(spaceKey) {
+            activeSpaceKey = SPACE_MEDIA[spaceKey] ? spaceKey : 'regularOffice';
+            activeSpaceIndex = 0;
+            renderSpacePhoto();
+            if (spacePhotoModal) spacePhotoModal.classList.add('active');
+        }
+
+        function closeSpacePhotoModal() {
+            if (spacePhotoModal) spacePhotoModal.classList.remove('active');
+        }
+
+        if (checkAvailabilityBtn) {
+            checkAvailabilityBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                availabilityModal.classList.add('active');
+                updateAvailabilityDisplay();
+            });
+        }
+
+        // Close modal when X is clicked
+        if (modalClose) {
+            modalClose.addEventListener('click', function() {
+                availabilityModal.classList.remove('active');
+            });
+        }
+
+        // Close modal when clicking outside the modal content
+        if (availabilityModal) {
+            availabilityModal.addEventListener('click', function(e) {
+                if (e.target === availabilityModal) {
+                    availabilityModal.classList.remove('active');
+                }
+            });
+        }
+
+        // Click a space to show its photos (opens modal)
+        document.querySelectorAll('#availabilityModal .availability-item[data-space]').forEach(item => {
+            const spaceKey = item.getAttribute('data-space');
+            item.addEventListener('click', () => openSpacePhotoModal(spaceKey));
+            item.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openSpacePhotoModal(spaceKey);
+                }
+            });
+        });
+
+        if (spacePrevBtn) {
+            spacePrevBtn.addEventListener('click', () => {
+                const entry = SPACE_MEDIA[activeSpaceKey] || SPACE_MEDIA.regularOffice;
+                activeSpaceIndex = (activeSpaceIndex - 1 + entry.images.length) % entry.images.length;
+                renderSpacePhoto();
+            });
+        }
+
+        if (spaceNextBtn) {
+            spaceNextBtn.addEventListener('click', () => {
+                const entry = SPACE_MEDIA[activeSpaceKey] || SPACE_MEDIA.regularOffice;
+                activeSpaceIndex = (activeSpaceIndex + 1) % entry.images.length;
+                renderSpacePhoto();
+            });
+        }
+
+        if (spacePhotoCloseBtn) {
+            spacePhotoCloseBtn.addEventListener('click', closeSpacePhotoModal);
+        }
+
+        if (spacePhotoModal) {
+            spacePhotoModal.addEventListener('click', (e) => {
+                if (e.target === spacePhotoModal) closeSpacePhotoModal();
+            });
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (!spacePhotoModal || !spacePhotoModal.classList.contains('active')) return;
+            if (e.key === 'Escape') closeSpacePhotoModal();
+            if (e.key === 'ArrowLeft' && spacePrevBtn && spacePrevBtn.offsetParent !== null) spacePrevBtn.click();
+            if (e.key === 'ArrowRight' && spaceNextBtn && spaceNextBtn.offsetParent !== null) spaceNextBtn.click();
+        });
+
+        // Admin Panel JavaScript
+        const ADMIN_PASSWORD = 'admin123'; // Change this to your desired password
+        let isAdminLoggedIn = false;
+
+        // Default availability data
+        const defaultAvailability = {
+            regularOffice: 11,
+            socialSpace: 1,
+            privateSpace: 1,
+            conferenceRoom: 1
+        };
+
+        // === SYNC: Firebase (real-time) OR MantleDB (polling) - no setup needed ===
+        const MANTLEDB_URL = 'https://mantledb.sh/v2/brainwave-studyhub/availability';
+        const MANTLEDB_STATUS_URL = 'https://mantledb.sh/v2/brainwave-studyhub/status';
+        const FIREBASE_CONFIG = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        let dbRef = null;
+        let useFirebase = false;
+
+        if (typeof firebase !== 'undefined' && FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.apiKey !== "YOUR_API_KEY") {
+            try {
+                firebase.initializeApp(FIREBASE_CONFIG);
+                dbRef = firebase.database().ref('brainwave/availability');
+                useFirebase = true;
+            } catch (e) {
+                console.warn('Firebase init failed:', e);
+            }
+        }
+
+        let currentAvailability = { ...defaultAvailability };
+
+        function getAvailability() {
+            return currentAvailability;
+        }
+
+        function setManualStatus(nextValue) {
+            currentManualStatus = !!nextValue;
+            localStorage.setItem('brainwaveManualStatus', currentManualStatus.toString());
+            if (typeof updateToggleText === 'function') updateToggleText();
+            updateStatusSign();
+        }
+
+        function initializeManualStatus() {
+            // Seed cloud if missing, otherwise load from cloud
+            if (useFirebase) {
+                const statusRef = firebase.database().ref('brainwave/status');
+                statusRef.once('value', function(snap) {
+                    if (!snap.exists()) {
+                        statusRef.set({ manualOpen: currentManualStatus }).catch(() => {});
+                    } else {
+                        const data = snap.val();
+                        if (data && typeof data.manualOpen === 'boolean') setManualStatus(data.manualOpen);
+                    }
+                });
+                return;
+            }
+
+            fetch(MANTLEDB_STATUS_URL)
+                .then(r => r.ok ? r.json() : null)
+                .then(data => {
+                    if (data && typeof data.manualOpen === 'boolean') {
+                        setManualStatus(data.manualOpen);
+                    } else {
+                        fetch(MANTLEDB_STATUS_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ manualOpen: currentManualStatus })
+                        }).catch(() => {});
+                    }
+                })
+                .catch(() => {});
+        }
+
+        function setupStatusListener() {
+            if (useFirebase) {
+                firebase.database().ref('brainwave/status').on('value', function(snap) {
+                    const data = snap.val();
+                    if (data && typeof data.manualOpen === 'boolean') setManualStatus(data.manualOpen);
+                });
+                return;
+            }
+
+            setInterval(function() {
+                fetch(MANTLEDB_STATUS_URL)
+                    .then(r => r.ok ? r.json() : null)
+                    .then(data => {
+                        if (data && typeof data.manualOpen === 'boolean' && data.manualOpen !== currentManualStatus) {
+                            setManualStatus(data.manualOpen);
+                        }
+                    })
+                    .catch(() => {});
+            }, 2500);
+        }
+
+        function persistManualStatus() {
+            if (useFirebase) {
+                firebase.database().ref('brainwave/status').set({ manualOpen: currentManualStatus }).catch(() => {});
+            } else {
+                fetch(MANTLEDB_STATUS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ manualOpen: currentManualStatus })
+                }).catch(() => {});
+            }
+        }
+
+        function initializeAvailability() {
+            if (useFirebase && dbRef) {
+                dbRef.once('value', function(snap) {
+                    if (!snap.exists()) dbRef.set(defaultAvailability);
+                });
+                return;
+            }
+            fetch(MANTLEDB_URL)
+                .then(r => r.ok ? r.json() : null)
+                .then(data => {
+                    if (data && data.regularOffice !== undefined) {
+                        currentAvailability = { ...defaultAvailability, ...data };
+                        localStorage.setItem('brainwaveAvailability', JSON.stringify(currentAvailability));
+                    } else {
+                        const stored = localStorage.getItem('brainwaveAvailability');
+                        if (stored) currentAvailability = { ...defaultAvailability, ...JSON.parse(stored) };
+                        fetch(MANTLEDB_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(currentAvailability) }).catch(() => {});
+                    }
+                    updateAvailabilityDisplay();
+                })
+                .catch(() => {
+                    const stored = localStorage.getItem('brainwaveAvailability');
+                    if (stored) currentAvailability = { ...defaultAvailability, ...JSON.parse(stored) };
+                    updateAvailabilityDisplay();
+                });
+        }
+
+        function setupRealtimeListener() { 
+            if (useFirebase && dbRef) {
+                dbRef.on('value', function(snap) {
+                    const data = snap.val();
+                    if (data) {
+                        currentAvailability = { ...defaultAvailability, ...data };
+                        updateAvailabilityDisplay();
+                        if (isAdminLoggedIn) loadAdminValues();
+                    }
+                });
+            } else {
+                setInterval(function() {
+                    fetch(MANTLEDB_URL).then(r => r.ok ? r.json() : null).then(data => {
+                        if (data && data.regularOffice !== undefined) {
+                            const prev = JSON.stringify(currentAvailability);
+                            currentAvailability = { ...defaultAvailability, ...data };
+                            if (prev !== JSON.stringify(currentAvailability)) {
+                                updateAvailabilityDisplay();
+                                if (isAdminLoggedIn) loadAdminValues();
+                            }
+                        }
+                    }).catch(() => {});
+                }, 2500);
+            }
+        }
+
+        // Update availability display (all modals on page)
+        function updateAvailabilityDisplay() {
+            const availability = getAvailability();
+            const order = ['regularOffice', 'socialSpace', 'privateSpace', 'conferenceRoom'];
+            document.querySelectorAll('.availability-count').forEach((el, i) => {
+                const key = order[i % 4];
+                el.innerHTML = `${availability[key]}<span>Available</span>`;
+            });
+        }
+
+        // Admin button elements
+        const adminBtn = document.getElementById('adminBtn');
+        const adminLoginModal = document.getElementById('adminLoginModal');
+        const adminPanel = document.getElementById('adminPanel');
+        const adminLoginBtn = document.getElementById('adminLoginBtn');
+        const adminPassword = document.getElementById('adminPassword');
+        const adminSaveBtn = document.getElementById('adminSaveBtn');
+        const adminLogoutBtn = document.getElementById('adminLogoutBtn');
+        const adminPanelCloseBtn = document.getElementById('adminPanelCloseBtn');
+
+        function updateSyncStatus() {
+            const el = document.getElementById('syncStatus');
+            if (!el) return;
+            if (window.location.protocol === 'file:') {
+                el.textContent = '⚠️ Open via http:// or https:// (local server or host) for cross-device sync';
+                el.style.background = '#fef3c7';
+                el.style.color = '#92400e';
+            } else if (useFirebase && dbRef) {
+                el.textContent = '✓ Real-time sync – changes update on all devices instantly';
+                el.style.background = '#d1fae5';
+                el.style.color = '#065f46';
+            } else {
+                el.textContent = '✓ Cloud sync (every 2–3s) – keep the page open on both devices';
+                el.style.background = '#e0f2fe';
+                el.style.color = '#0369a1';
+            }
+        }
+
+        adminBtn.addEventListener('click', function() {
+            if (isAdminLoggedIn) {
+                adminPanel.classList.add('active');
+                loadAdminValues();
+                updateSyncStatus();
+            } else {
+                adminLoginModal.classList.add('active');
+            }
+        });
+
+        // Business Status Toggle Handler (synced like availability)
+        const businessStatusToggle = document.getElementById('businessStatusToggle');
+        const toggleText = document.getElementById('toggleText');
+
+        // Set initial UI state from currentManualStatus
+        businessStatusToggle.checked = currentManualStatus === true;
+        updateToggleText();
+
+        // Handle toggle changes
+        businessStatusToggle.addEventListener('change', function() {
+            setManualStatus(this.checked === true);
+            persistManualStatus();
+        });
+
+        // Update toggle text
+        function updateToggleText() {
+            businessStatusToggle.checked = currentManualStatus === true;
+            if (currentManualStatus === true) {
+                toggleText.textContent = 'OPEN';
+                toggleText.style.background = '#d1fae5';
+                toggleText.style.color = '#059669';
+            } else {
+                toggleText.textContent = 'CLOSED';
+                toggleText.style.background = '#fee2e2';
+                toggleText.style.color = '#dc2626';
+            }
+        }
+
+        // Admin login handler
+        adminLoginBtn.addEventListener('click', function() {
+            if (adminPassword.value === ADMIN_PASSWORD) {
+                isAdminLoggedIn = true;
+                adminLoginModal.classList.remove('active');
+                adminPanel.classList.add('active');
+                loadAdminValues();
+                adminPassword.value = '';
+            } else {
+                alert('Incorrect password!');
+                adminPassword.value = '';
+                adminPassword.focus();
+            }
+        });
+
+        // Allow Enter key to login
+        adminPassword.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                adminLoginBtn.click();
+            }
+        });
+
+        // Load current values into admin panel
+        function loadAdminValues() {
+            const availability = getAvailability();
+            document.getElementById('regularOfficeCount').value = availability.regularOffice;
+            document.getElementById('socialSpaceCount').value = availability.socialSpace;
+            document.getElementById('privateSpaceCount').value = availability.privateSpace;
+            document.getElementById('conferenceRoomCount').value = availability.conferenceRoom;
+        }
+
+        // Save changes (writes to Firebase, MantleDB, and localStorage)
+        adminSaveBtn.addEventListener('click', function() {
+            const newAvailability = {
+                regularOffice: parseInt(document.getElementById('regularOfficeCount').value) || 0,
+                socialSpace: parseInt(document.getElementById('socialSpaceCount').value) || 0,
+                privateSpace: parseInt(document.getElementById('privateSpaceCount').value) || 0,
+                conferenceRoom: parseInt(document.getElementById('conferenceRoomCount').value) || 0
+            };
+
+            if (useFirebase && dbRef) {
+                dbRef.set(newAvailability).then(function() {
+                    currentAvailability = newAvailability;
+                    localStorage.setItem('brainwaveAvailability', JSON.stringify(newAvailability));
+                    updateAvailabilityDisplay();
+                    alert('Saved! All devices will update in real time.');
+                }).catch(function(err) {
+                    alert('Failed to save: ' + err.message);
+                });
+            } else {
+                localStorage.setItem('brainwaveAvailability', JSON.stringify(newAvailability));
+                currentAvailability = newAvailability;
+                updateAvailabilityDisplay();
+                fetch(MANTLEDB_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newAvailability)
+                }).then(function(r) {
+                    if (r.ok) alert('Saved! Other devices will update within a few seconds.');
+                    else alert('Saved locally. Sync to other devices may have failed.');
+                }).catch(function() {
+                    alert('Saved locally. Open the site on both devices (same URL) for sync.');
+                });
+            }
+        });
+
+        // Close admin panel
+        adminPanelCloseBtn.addEventListener('click', function() {
+            adminPanel.classList.remove('active');
+        });
+
+        // Logout
+        adminLogoutBtn.addEventListener('click', function() {
+            isAdminLoggedIn = false;
+            adminPanel.classList.remove('active');
+            adminLoginModal.classList.remove('active');
+        });
+
+        // Close login modal when clicking outside
+        adminLoginModal.addEventListener('click', function(e) {
+            if (e.target === adminLoginModal) {
+                adminLoginModal.classList.remove('active');
+            }
+        });
+
+        // Close admin panel when clicking outside
+        adminPanel.addEventListener('click', function(e) {
+            if (e.target === adminPanel) {
+                adminPanel.classList.remove('active');
+            }
+        });
+
+        // Initialize availability + business status on page load and start listeners
+        initializeManualStatus();
+        setupStatusListener();
+        initializeAvailability();
+        setupRealtimeListener();
+        updateToggleText();
+        updateStatusSign();
+        updateAvailabilityDisplay();
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
